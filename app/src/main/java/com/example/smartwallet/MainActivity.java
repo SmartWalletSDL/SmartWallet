@@ -2,7 +2,10 @@ package com.example.smartwallet;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
@@ -72,9 +75,33 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseUser currUser = mFirebaseAuth.getCurrentUser();
         if (currUser==null) {
-            Intent tohome = new Intent(MainActivity.this,LoginActivity.class);
-            startActivity(tohome);
-            finish();
+            goToLogin();
         }
+    }
+
+    private void goToLogin() {
+        Intent tohome = new Intent(MainActivity.this,LoginActivity.class);
+        startActivity(tohome);
+        finish();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        super.onOptionsItemSelected(item);
+
+        if(item.getItemId() == R.id.menu_log_out){
+            FirebaseAuth.getInstance().signOut();
+            goToLogin();
+        }
+
+        return true;
     }
 }
