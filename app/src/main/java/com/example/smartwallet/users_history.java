@@ -2,6 +2,7 @@ package com.example.smartwallet;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,17 +11,29 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 
 public class users_history extends AppCompatActivity {
 
     ListView listView;
     ArrayList<String> history;
+    FloatingActionButton addbill;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users_history);
+
+        addbill = findViewById(R.id.addBill);
+        addbill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),add_bill.class);
+                startActivity(intent);
+            }
+        });
 
         listView = findViewById(R.id.history_list);
         history = new ArrayList<>();

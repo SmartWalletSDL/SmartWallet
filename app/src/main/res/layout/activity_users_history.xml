@@ -12,9 +12,32 @@
         android:layout_height="216dp"
         android:background="#009688" />
 
-    <ListView
-        android:id="@+id/history_list"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addBill"
+            android:layout_width="78dp"
+            android:layout_height="66dp"
+            android:layout_gravity="end|bottom"
+            android:layout_marginBottom="12dp"
+            android:layout_marginEnd="12dp"
+            android:clickable="true"
+            app:srcCompat="@android:drawable/ic_input_add" />
+
+        <ListView
+            android:id="@+id/history_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+        </ListView>
+
+
+
+
+    </FrameLayout>
+
+
 
 </LinearLayout>
