@@ -5,7 +5,6 @@
     <string name="sign_up">Sign Up</string>
     <string name="already_registered_go_to_login">Already registered? Go to login</string>
     <string name="not_registered_sign_up_here">Not registered? Sign up here</string>
-    <string name="login_in">Login In</string>
     <string name="you_are_logged_in">You are logged in!</string>
     
     <!-- TODO: Remove or change this placeholder text -->
@@ -15,4 +14,9 @@
     <string name="activity">activity</string>
     <string name="account_settings">Account Settings</string>
     <string name="log_out">Log Out</string>
+    <string name="login_to_your_account">Login to your account</string>
+    <string name="log_in">Log In</string>
+    <string name="create_account">Create Account</string>
+    <string name="username">Username</string>
+    <string name="create_a_new_account">Create a New Account</string>
 </resources>

@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -21,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mFirebaseAuth;
 
+    Toolbar toolbar;
     private EditText emailId, password;
     private Button btnLogin;
     private TextView tvlogin;
@@ -32,10 +34,15 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
+        toolbar = findViewById(R.id.login_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Log In");
+
         mFirebaseAuth = FirebaseAuth.getInstance();
+
         emailId = findViewById(R.id.loginEmail);
         password = findViewById(R.id.loginPassword);
-        btnLogin = findViewById(R.id.loginIn);
+        btnLogin = findViewById(R.id.logIn);
         tvlogin = findViewById(R.id.toSignupText);
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
@@ -45,8 +52,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (mFirebaseUser != null) {
                     Toast.makeText(LoginActivity.this,"You are logged in",
                             Toast.LENGTH_SHORT).show();
-                    Intent tohome = new Intent(LoginActivity.this,MainActivity.class);
-                    startActivity(tohome);
+                    goToMain();
                 }
                 else {
                     Toast.makeText(LoginActivity.this,"Not logged in!",
@@ -61,7 +67,11 @@ public class LoginActivity extends AppCompatActivity {
                 String email = emailId.getText().toString();
                 String pwd = password.getText().toString();
 
-                if (email.isEmpty()) {
+                if(!email.isEmpty() && !pwd.isEmpty()){
+                    loginUser(email,pwd);
+                }
+
+                else if (email.isEmpty()) {
                     emailId.setError("Enter email");
                     emailId.requestFocus();
                 }
@@ -69,33 +79,6 @@ public class LoginActivity extends AppCompatActivity {
                     password.setError("Enter password");
                     password.requestFocus();
                 }
-                else if (email.isEmpty() && pwd.isEmpty()) {
-                    Toast.makeText(LoginActivity.this,
-                            "Fields are empty!",Toast.LENGTH_SHORT).show();
-                }
-                else if(!email.isEmpty() && !pwd.isEmpty()) {
-                    mFirebaseAuth.signInWithEmailAndPassword(email,pwd)
-                            .addOnCompleteListener(LoginActivity.this,
-                                    new OnCompleteListener<AuthResult>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<AuthResult> task) {
-                                            if (!task.isSuccessful()) {
-                                                Toast.makeText(LoginActivity.this,
-                                                        "Login error! Try again",Toast.LENGTH_SHORT).show();
-                                            }
-                                            else {
-                                                Intent tohome = new Intent
-                                                        (LoginActivity.this,MainActivity.class);
-                                                startActivity(tohome);
-                                            }
-                                        }
-                                    });
-                }
-                else {
-                    Toast.makeText(LoginActivity.this,
-                            "Error occured!",Toast.LENGTH_SHORT).show();
-                }
-
             }
         });
 
@@ -108,5 +91,29 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void loginUser(String email, String pwd) {
+        mFirebaseAuth.signInWithEmailAndPassword(email,pwd)
+                .addOnCompleteListener(LoginActivity.this,
+                        new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    goToMain();
+                                }
+                                else {
+                                    Toast.makeText(LoginActivity.this,
+                                            "Login error! Try again",Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+    }
+
+    private void goToMain() {
+        Intent tomain = new Intent(LoginActivity.this,MainActivity.class);
+        tomain.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(tomain);
+        finish();
     }
 }

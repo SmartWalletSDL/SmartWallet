@@ -34,9 +34,9 @@ public class MainActivity extends AppCompatActivity {
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
-        toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.main_activity_toolbar);
         setSupportActionBar(toolbar);
-        //getSupportActionBar().setTitle("Smart Wallet");
+        getSupportActionBar().setTitle("Smart Wallet");
 
         tabLayout = findViewById(R.id.tablayout);
         users = findViewById(R.id.users);
@@ -80,8 +80,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void goToLogin() {
-        Intent tohome = new Intent(MainActivity.this,LoginActivity.class);
-        startActivity(tohome);
+        Intent tologin = new Intent(MainActivity.this,LoginActivity.class);
+        startActivity(tologin);
         finish();
     }
 
@@ -101,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
             FirebaseAuth.getInstance().signOut();
             goToLogin();
         }
-
         return true;
     }
 }
