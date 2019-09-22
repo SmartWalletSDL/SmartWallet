@@ -2,6 +2,7 @@ package com.example.smartwallet;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +17,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -24,6 +30,8 @@ public class SignUpActivity extends AppCompatActivity {
     private Button btnSignup;
     private TextView tvsignup;
     FirebaseAuth mFirebaseAuth;
+
+    private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,13 +85,24 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-    private void registerUser(String usernm, String email, String pwd) {
+    private void registerUser(final String usernm, final String email, String pwd) {
         mFirebaseAuth.createUserWithEmailAndPassword(email,pwd).
                 addOnCompleteListener(SignUpActivity.this,
                         new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
+                                    FirebaseUser currUser = FirebaseAuth.getInstance().getCurrentUser();
+                                    String uid = currUser.getUid();
+
+                                    databaseReference = FirebaseDatabase.getInstance().getReference().child("allUsers").child(uid);
+                                    HashMap<String,String> map = new HashMap<>();
+                                    map.put("Username",usernm);
+                                    map.put("EmailId",email);
+                                    databaseReference.setValue(map);
+
+
+
                                     goToMain();
                                 }
                                 else {
