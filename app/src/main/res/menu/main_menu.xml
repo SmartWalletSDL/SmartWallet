@@ -7,8 +7,8 @@
         android:title="@string/account_settings" />
 
     <item
-        android:id="@+id/all_users"
-        android:title="@string/all_users" />
+        android:id="@+id/friend_requests"
+        android:title="@string/friend_requests" />
 
     <item
         android:id="@+id/menu_log_out"

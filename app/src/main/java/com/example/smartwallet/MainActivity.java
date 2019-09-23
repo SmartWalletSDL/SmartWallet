@@ -102,8 +102,8 @@ public class MainActivity extends AppCompatActivity {
             goToLogin();
         }
 
-        if(item.getItemId() == R.id.all_users){
-            Intent intent = new Intent(MainActivity.this,allUsers.class);
+        if(item.getItemId() == R.id.friend_requests){
+            Intent intent = new Intent(MainActivity.this,friend_requests.class);
             startActivity(intent);
         }
         return true;

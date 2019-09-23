@@ -10,10 +10,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
@@ -25,6 +32,11 @@ public class allUsers extends AppCompatActivity {
     private RecyclerView recyclerView;
     Query query;
     FirebaseRecyclerAdapter adapter;
+
+    private DatabaseReference friendRequestDatabase;
+    private String curr_state;
+    private FirebaseUser curr_user;
+    String curr_user_id,user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +52,13 @@ public class allUsers extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        friendRequestDatabase  = FirebaseDatabase.getInstance().getReference().child("Friend_req");
+        curr_user = FirebaseAuth.getInstance().getCurrentUser();
+        curr_user_id = curr_user.getUid();
+
+
+        curr_state = "not_friends";
+
         query = FirebaseDatabase.getInstance().getReference().child("allUsers");
 
         FirebaseRecyclerOptions<Users> options = new FirebaseRecyclerOptions.Builder<Users>()
@@ -51,8 +70,35 @@ public class allUsers extends AppCompatActivity {
             @NonNull
             @Override
             public UsersViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_users_recycler_list,parent,false);
-                return new UsersViewHolder(view);
+                final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_users_recycler_list,parent,false);
+                return new UsersViewHolder(view, new UsersViewHolder.MyClickListener() {
+                    @Override
+                    public void onAddFriend(int p) {
+                        user_id = getRef(p).getKey();
+                        if(!curr_user_id.equals(user_id)){
+                        friendRequestDatabase.child(curr_user_id).child(user_id).child("request_type").setValue("sent").addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()){
+                                    friendRequestDatabase.child(user_id).child(curr_user_id).child("request_type").setValue("received").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if(task.isSuccessful()){
+                                                Button button = view.findViewById(R.id.addFriend);
+                                                button.setBackgroundResource(R.drawable.common_google_signin_btn_icon_dark);
+                                                button.setEnabled(false);
+                                                Toast.makeText(allUsers.this,"Request Sent Successfully",Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        });}else{
+                            Toast.makeText(allUsers.this,"Stop Requesting To Yourself!",Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+                });
             }
 
             @Override
@@ -77,13 +123,18 @@ public class allUsers extends AppCompatActivity {
         adapter.stopListening();
     }
 
-    public static class UsersViewHolder extends RecyclerView.ViewHolder{
+    public static class UsersViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         View view;
+        Button addFriend;
+        MyClickListener listener;
 
-        public UsersViewHolder(@NonNull View itemView) {
+        public UsersViewHolder(@NonNull View itemView,MyClickListener listener) {
             super(itemView);
 
             view = itemView;
+            addFriend = view.findViewById(R.id.addFriend);
+            this.listener = listener;
+            addFriend.setOnClickListener(this);
         }
 
         public void setUsername(String username) {
@@ -94,6 +145,15 @@ public class allUsers extends AppCompatActivity {
         public void setEmailId(String emailId) {
             TextView textView = view.findViewById(R.id.emailid);
             textView.setText(emailId);
+        }
+
+        @Override
+        public void onClick(View v) {
+            listener.onAddFriend(this.getLayoutPosition());
+        }
+
+        public interface MyClickListener{
+            void onAddFriend(int p);
         }
     }
 }

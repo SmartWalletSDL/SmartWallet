@@ -56,7 +56,8 @@ public class users extends Fragment {
         addUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                users.add("new user");
+                Intent intent = new Intent(getContext(),com.example.smartwallet.allUsers.class);
+                startActivity(intent);
                 usersAdapter.notifyDataSetChanged();
             }
         });
