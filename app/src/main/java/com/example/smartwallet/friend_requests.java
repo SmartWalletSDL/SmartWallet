@@ -28,6 +28,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+
 public class friend_requests extends AppCompatActivity {
 
     Query query;
@@ -76,10 +78,13 @@ public class friend_requests extends AppCompatActivity {
                     @Override
                     public void onAddFriend(final int p) {
                         final String user_id = getRef(p).getKey();
-                        friendDatabaseReference.child(curr_user_id).child("history").child(user_id).setValue("true");
-                        friendDatabaseReference.child(user_id).child("history").child(curr_user_id).setValue("true");
-                        friendDatabaseReference.child(user_id).child("topUI").child(curr_user_id).setValue("true");
-                        friendDatabaseReference.child(curr_user_id).child("topUI").child(user_id).setValue("true").addOnCompleteListener(new OnCompleteListener<Void>() {
+                        HashMap<String,String> map = new HashMap<>();
+                        map.put("isOwed","2");
+                        map.put("prevTransactionName","none");
+                        map.put("prevTransactionValue","0");
+                        map.put("total","0");
+                        friendDatabaseReference.child(user_id).child("topUI").child(curr_user_id).setValue(map);
+                        friendDatabaseReference.child(curr_user_id).child("topUI").child(user_id).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if(task.isSuccessful()){

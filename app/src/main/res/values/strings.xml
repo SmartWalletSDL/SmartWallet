@@ -25,4 +25,5 @@
     <string name="others">Others</string>
     <string name="all_users">All Users</string>
     <string name="friend_requests">Friend requests</string>
+    <string name="you_are_owed">you are owed</string>
 </resources>
