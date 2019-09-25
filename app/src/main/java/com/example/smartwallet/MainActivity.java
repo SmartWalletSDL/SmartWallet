@@ -97,15 +97,21 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         super.onOptionsItemSelected(item);
 
+        if(item.getItemId() == R.id.all_users){
+            Intent allUsers = new Intent(MainActivity.this,allUsers.class);
+            startActivity(allUsers);
+        }
+
+        if (item.getItemId() == R.id.menu_settings) {
+            Intent menuSettings = new Intent(MainActivity.this, settings.class);
+            startActivity(menuSettings);
+        }
+
         if(item.getItemId() == R.id.menu_log_out){
             FirebaseAuth.getInstance().signOut();
             goToLogin();
         }
 
-        if(item.getItemId() == R.id.all_users){
-            Intent intent = new Intent(MainActivity.this,allUsers.class);
-            startActivity(intent);
-        }
         return true;
     }
 }

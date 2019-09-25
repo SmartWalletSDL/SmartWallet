@@ -31,7 +31,7 @@ public class allUsers extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_users);
 
-        toolbar = findViewById(R.id.app_tollbar);
+        toolbar = findViewById(R.id.app_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("All Users");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

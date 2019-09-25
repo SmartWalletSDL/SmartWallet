@@ -3,12 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menu_acc_sett"
-        android:title="@string/account_settings" />
-
-    <item
         android:id="@+id/all_users"
         android:title="@string/all_users" />
+
+    <item
+        android:id="@+id/menu_settings"
+        android:title="Settings" />
 
     <item
         android:id="@+id/menu_log_out"
