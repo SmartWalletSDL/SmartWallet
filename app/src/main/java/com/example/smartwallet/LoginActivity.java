@@ -1,6 +1,5 @@
 package com.example.smartwallet;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -28,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnLogin;
     private TextView tvlogin;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
-    private ProgressDialog loginProgress;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,18 +44,19 @@ public class LoginActivity extends AppCompatActivity {
         password = findViewById(R.id.loginPassword);
         btnLogin = findViewById(R.id.logIn);
         tvlogin = findViewById(R.id.toSignupText);
-        loginProgress = new ProgressDialog(this);
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
                 if (mFirebaseUser != null) {
-                    Toast.makeText(LoginActivity.this,"You are logged in", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this,"You are logged in",
+                            Toast.LENGTH_SHORT).show();
                     goToMain();
                 }
                 else {
-                    Toast.makeText(LoginActivity.this,"Not logged in!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this,"Not logged in!",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -68,10 +68,6 @@ public class LoginActivity extends AppCompatActivity {
                 String pwd = password.getText().toString();
 
                 if(!email.isEmpty() && !pwd.isEmpty()){
-                    loginProgress.setTitle("Logging In");
-                    loginProgress.setMessage("Please Wait, while we check your credentials");
-                    loginProgress.setCanceledOnTouchOutside(false);
-                    loginProgress.show();
                     loginUser(email,pwd);
                 }
 
@@ -104,12 +100,11 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    loginProgress.dismiss();
                                     goToMain();
                                 }
                                 else {
-                                    loginProgress.hide();
-                                    Toast.makeText(LoginActivity.this,"Login Failed! Try again",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this,
+                                            "Login error! Try again",Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });

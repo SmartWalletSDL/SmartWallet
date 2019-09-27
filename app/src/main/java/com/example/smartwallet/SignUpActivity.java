@@ -1,6 +1,5 @@
 package com.example.smartwallet;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,7 +29,6 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText emailId, password, username;
     private Button btnSignup;
     private TextView tvsignup;
-    private ProgressDialog regProgress;
     FirebaseAuth mFirebaseAuth;
 
     private DatabaseReference databaseReference;
@@ -44,13 +42,13 @@ public class SignUpActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Create Account");
 
+
         mFirebaseAuth = FirebaseAuth.getInstance();
         username = findViewById(R.id.signupUsername);
         emailId = findViewById(R.id.signupEmail);
         password = findViewById(R.id.signupPassword);
         btnSignup = findViewById(R.id.signUp);
         tvsignup = findViewById(R.id.toLoginText);
-        regProgress = new ProgressDialog(this);
 
         btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,17 +58,8 @@ public class SignUpActivity extends AppCompatActivity {
                 String pwd = password.getText().toString();
 
 
-                if(!usernm.isEmpty() && !email.isEmpty() && !pwd.isEmpty()) {
-                    regProgress.setTitle("Registering User");
-                    regProgress.setMessage("Please Wait, while we create your account");
-                    regProgress.setCanceledOnTouchOutside(false);
-                    regProgress.show();
+                if(!usernm.isEmpty() && !email.isEmpty() && !pwd.isEmpty()){
                     registerUser(usernm,email,pwd);
-                }
-
-                else if (usernm.isEmpty()) {
-                    username.setError("Enter Name");
-                    username.requestFocus();
                 }
 
                 else if (email.isEmpty()) {
@@ -103,7 +92,6 @@ public class SignUpActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    regProgress.dismiss();
                                     FirebaseUser currUser = FirebaseAuth.getInstance().getCurrentUser();
                                     String uid = currUser.getUid();
 
@@ -113,11 +101,13 @@ public class SignUpActivity extends AppCompatActivity {
                                     map.put("EmailId",email);
                                     databaseReference.setValue(map);
 
+
+
                                     goToMain();
                                 }
                                 else {
-                                    regProgress.hide();
-                                    Toast.makeText(SignUpActivity.this, "SignUp failed! Try again",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SignUpActivity.this,
+                                            "SignUp failed! Try again",Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
