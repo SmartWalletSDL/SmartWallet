@@ -19,11 +19,11 @@
     <string name="create_account">Create Account</string>
     <string name="username">Username</string>
     <string name="create_a_new_account">Create a New Account</string>
-    <string name="food">Food</string>
-    <string name="shopping">Shopping</string>
-    <string name="books">Books</string>
-    <string name="others">Others</string>
     <string name="all_users">All Users</string>
     <string name="friend_requests">Friend requests</string>
     <string name="you_are_owed">you are owed</string>
+    <string name="food">Food</string>
+    <string name="shopping">Shopping</string>
+    <string name="movies">Movies</string>
+    <string name="others">Others</string>
 </resources>
