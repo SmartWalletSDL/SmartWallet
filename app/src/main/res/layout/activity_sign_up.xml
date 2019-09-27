@@ -17,9 +17,9 @@
         android:id="@+id/signupEmail"
         android:layout_width="350dp"
         android:layout_height="50dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="30dp"
-        android:layout_marginEnd="41dp"
+        android:layout_marginEnd="30dp"
         android:ems="10"
         android:hint="@string/email"
         android:importantForAutofill="no"
@@ -30,15 +30,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signupUsername" />
+        app:layout_constraintTop_toBottomOf="@+id/signupName" />
 
     <EditText
         android:id="@+id/signupPassword"
         android:layout_width="350dp"
         android:layout_height="50dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="30dp"
-        android:layout_marginEnd="41dp"
+        android:layout_marginEnd="30dp"
         android:ems="10"
         android:hint="@string/password"
         android:importantForAutofill="no"
@@ -55,7 +55,7 @@
         android:layout_height="50dp"
         android:layout_marginStart="253dp"
         android:layout_marginTop="60dp"
-        android:layout_marginEnd="40dp"
+        android:layout_marginEnd="30dp"
         android:backgroundTint="@android:color/holo_red_dark"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
@@ -84,7 +84,7 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="30dp"
         android:text="@string/create_a_new_account"
         android:textColor="#000000"
@@ -93,15 +93,18 @@
         app:layout_constraintTop_toBottomOf="@+id/signup_toolbar" />
 
     <EditText
-        android:id="@+id/signupUsername"
-        android:layout_width="250dp"
+        android:id="@+id/signupName"
+        android:layout_width="350dp"
         android:layout_height="50dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="40dp"
+        android:layout_marginEnd="30dp"
         android:ems="10"
-        android:hint="@string/username"
+        android:hint="Name"
         android:inputType="text"
         android:textColorHint="@color/common_google_signin_btn_text_light_pressed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.035"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
