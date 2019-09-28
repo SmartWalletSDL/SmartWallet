@@ -40,6 +40,7 @@
         app:layout_constraintTop_toTopOf="@+id/imageView3">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/descriptionText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter a description" />
@@ -67,6 +68,7 @@
         app:layout_constraintVertical_bias="1.0">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/totalText"
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:hint="0.00"
@@ -145,6 +147,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        app:singleSelection="true"
+        app:checkedChip="@+id/Food"
         app:layout_constraintEnd_toEndOf="@+id/description"
         app:layout_constraintStart_toStartOf="@+id/description"
         app:layout_constraintTop_toBottomOf="@+id/description">

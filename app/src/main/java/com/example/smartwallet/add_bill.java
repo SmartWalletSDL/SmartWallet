@@ -1,6 +1,7 @@
 package com.example.smartwallet;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.fragment.app.Fragment;
@@ -8,6 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,18 +25,24 @@ import android.widget.TextView;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.EventListener;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
 
 
 public class add_bill extends AppCompatActivity implements friendsSuggestedList.onSomeEventListener{
@@ -44,19 +52,22 @@ public class add_bill extends AppCompatActivity implements friendsSuggestedList.
     FrameLayout frameLayout;
     FragmentManager fragmentManager;
     boolean back=false;
-    ChipGroup chipGroup;
+    ChipGroup chipGroup,tags;
     Set<String> hashSet = new HashSet<String>();
     DatabaseReference databaseReference;
+    DatabaseReference databaseReferenceHistory;
     FirebaseUser curr_user;
     String curr_user_id;
 
     TextView paidBy,andSplit;
     Button you,equally,theyOwe;
 
+    TextInputEditText description,total;
+
     ListView theyOweListView;
     ArrayAdapter<String> adapter;
     ArrayList<String> theyOweItems;
-
+    int lastChipChecked;
 
 
 
@@ -68,13 +79,18 @@ public class add_bill extends AppCompatActivity implements friendsSuggestedList.
         setContentView(R.layout.activity_add_bill);
 
         chipGroup = findViewById(R.id.friendsNamesChips);
-        final int[] positionSelected = {0};
+        final int[] positionSelected = {2};
 
         theyOweItems = new ArrayList<>();
         theyOweItems.add("Paid by you and split equally");
         theyOweItems.add("You owe the full amount");
         theyOweItems.add("They owe the full amount");
         theyOweItems.add("Paid by the other person and split equally");
+
+        tags = findViewById(R.id.chipGroup);
+
+        description = findViewById(R.id.descriptionText);
+        total = findViewById(R.id.totalText);
 
 
         save = findViewById(R.id.saveBill);
@@ -90,6 +106,7 @@ public class add_bill extends AppCompatActivity implements friendsSuggestedList.
         curr_user = FirebaseAuth.getInstance().getCurrentUser();
         curr_user_id = curr_user.getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("allUsers").child(curr_user_id).child("Friends");
+        databaseReferenceHistory = FirebaseDatabase.getInstance().getReference().child("allUsers");
 
         usersNames = findViewById(R.id.textInputLayout);
         usersNames.setOnClickListener(new View.OnClickListener() {
@@ -150,12 +167,165 @@ public class add_bill extends AppCompatActivity implements friendsSuggestedList.
             }
         });
 
+        lastChipChecked = tags.getCheckedChipId();
+
+        tags.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(ChipGroup group, int checkedId) {
+                if(checkedId == View.NO_ID){
+                    group.check(lastChipChecked);
+                    return;
+                }
+                lastChipChecked = checkedId;
+
+
+            }
+        });
+
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.e("hashset", String.valueOf(hashSet));
                 Log.e("positionSelected",Integer.toString(positionSelected[0]));
+                float youPay=0,theyPay=0;
+                boolean isOwed = false;
+                float totalVal = Float.parseFloat(total.getText().toString());
+                if(hashSet.size()==1){
+                    switch (positionSelected[0]){
+                        case 0:{
+                            theyPay = totalVal/2;
+                            youPay = totalVal/2;
+                            isOwed = false;
+                            break;
+                        }
+                        case 1: {
+                            youPay = totalVal;
+                            isOwed = true;
+                            break;
+                        }
+                        case 2:{
+                            theyPay = totalVal;
+                            isOwed = false;
+                            break;
+                        }
+                        case 3:{
+                            youPay = totalVal/2;
+                            theyPay = totalVal/2;
+                            isOwed = true;
+                            break;
+                        }
+                    }
+                }else{
+                    int people = hashSet.size()+1;
+                    youPay = totalVal/people;
+                    theyPay = totalVal/people;
+                }
+                final String descriptionVal = description.getText().toString();
+                String tag = "food";
+                if(lastChipChecked == findViewById(R.id.Shopping).getId()){
+                    tag = "shopping";
+                }else if(lastChipChecked == findViewById(R.id.Movies).getId()){
+                    tag = "movies";
+                }else if(lastChipChecked == findViewById(R.id.Others).getId()){
+                    tag = "others";
+                }
+
+                final DecimalFormat df = new DecimalFormat("0.00");
+
+                HashMap<String,Object> map = new HashMap<>();
+                map.put("isOwed",Boolean.toString(isOwed));
+                map.put("youPay",df.format(youPay));
+                map.put("theyPay",df.format(theyPay));
+                map.put("name",descriptionVal);
+                map.put("tag",tag);
+                map.put("timestamp", ServerValue.TIMESTAMP);
+
+                HashMap<String,Object> friendMap = new HashMap<>();
+                friendMap.put("isOwed",Boolean.toString(!isOwed));
+                friendMap.put("youPay",df.format(theyPay));
+                friendMap.put("theyPay",df.format(youPay));
+                friendMap.put("name",descriptionVal);
+                friendMap.put("tag",tag);
+                friendMap.put("timestamp", ServerValue.TIMESTAMP);
+
+                String uniqueID = UUID.randomUUID().toString();
+
+
+
+                for(final String i:hashSet){
+                    databaseReferenceHistory.child(curr_user_id).child("history").child(i).child(uniqueID).setValue(map);
+                    databaseReferenceHistory.child(i).child("history").child(curr_user_id).child(uniqueID).setValue(friendMap);
+                    final boolean finalIsOwed = isOwed;
+                    final float finalYouPay = youPay;
+                    final float finalTheyPay = theyPay;
+                    databaseReferenceHistory.child(curr_user_id).child("topUI").child(i).child("total").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            float totalTopUiValue = Float.parseFloat(dataSnapshot.getValue(String.class));
+                            float totalAfterAddition = 0;
+                            int isOwedInt = 0;
+                            if(finalIsOwed){
+                                totalAfterAddition = totalTopUiValue - finalYouPay;
+                            }else{
+                                totalAfterAddition = totalTopUiValue + finalTheyPay;
+                            }
+
+                            if(totalAfterAddition > 0){
+                                isOwedInt = 1;
+                            }else if(totalAfterAddition == 0){
+                                isOwedInt = 2;
+                            }
+
+
+                            float friendTotalAfterAddition = 0;
+                            int friendIsOwedInt = 0;
+                            if(finalIsOwed){
+                                friendTotalAfterAddition = totalTopUiValue + finalYouPay;
+                            }else{
+                                friendTotalAfterAddition = totalTopUiValue - finalTheyPay;
+                            }
+
+                            if(friendTotalAfterAddition > 0){
+                                friendIsOwedInt = 1;
+                            }else if(friendTotalAfterAddition == 0){
+                                friendIsOwedInt = 2;
+                            }
+
+                            HashMap<String,Object> map1 = new HashMap<>();
+                            map1.put("isOwed",Integer.toString(isOwedInt));
+                            map1.put("prevTransactionName",descriptionVal);
+                            map1.put("prevTransactionValue",df.format(finalYouPay));
+                            map1.put("total",df.format(totalAfterAddition));
+
+                            HashMap<String,Object> friendMap1 = new HashMap<>();
+                            friendMap1.put("isOwed",Integer.toString(friendIsOwedInt));
+                            friendMap1.put("prevTransactionName",descriptionVal);
+                            friendMap1.put("prevTransactionValue",df.format(finalTheyPay));
+                            friendMap1.put("total",df.format(friendTotalAfterAddition));
+
+                            databaseReferenceHistory.child(i).child("topUI").child(curr_user_id).updateChildren(friendMap1);
+
+                            databaseReferenceHistory.child(curr_user_id).child("topUI").child(i).updateChildren(map1, new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            });
+
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
 
             }
         });

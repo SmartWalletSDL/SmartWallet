@@ -84,6 +84,30 @@ public class friend_requests extends AppCompatActivity {
                         map.put("prevTransactionValue","0");
                         map.put("total","0");
                         friendDatabaseReference.child(user_id).child("topUI").child(curr_user_id).setValue(map);
+                        friendDatabaseReference.child(user_id).child("Username").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                String name = dataSnapshot.getValue(String.class);
+                                friendDatabaseReference.child(curr_user_id).child("Friends").child(user_id).setValue(name);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                        friendDatabaseReference.child(curr_user_id).child("Username").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                String name = dataSnapshot.getValue(String.class);
+                                friendDatabaseReference.child(user_id).child("Friends").child(curr_user_id).setValue(name);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
                         friendDatabaseReference.child(curr_user_id).child("topUI").child(user_id).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
