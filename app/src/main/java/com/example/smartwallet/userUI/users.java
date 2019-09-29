@@ -110,7 +110,6 @@ public class users extends Fragment {
                     public void onClick(View v) {
                         Intent intent = new Intent(getContext(),com.example.smartwallet.users_history.class);
                         intent.putExtra("User_id",user_id);
-                        Log.e("User_id",user_id);
                         startActivity(intent);
                     }
                 });

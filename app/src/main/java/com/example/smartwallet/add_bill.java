@@ -37,6 +37,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -239,7 +240,7 @@ public class add_bill extends AppCompatActivity implements friendsSuggestedList.
                 map.put("theyPay",df.format(theyPay));
                 map.put("name",descriptionVal);
                 map.put("tag",tag);
-                map.put("timestamp", ServerValue.TIMESTAMP);
+                map.put("timestamp", -1*new Date().getTime());
 
                 HashMap<String,Object> friendMap = new HashMap<>();
                 friendMap.put("isOwed",Boolean.toString(!isOwed));
@@ -247,9 +248,16 @@ public class add_bill extends AppCompatActivity implements friendsSuggestedList.
                 friendMap.put("theyPay",df.format(youPay));
                 friendMap.put("name",descriptionVal);
                 friendMap.put("tag",tag);
-                friendMap.put("timestamp", ServerValue.TIMESTAMP);
+                friendMap.put("timestamp", -1*new Date().getTime());
+
+                HashMap<String,Object> chart = new HashMap<>();
+                chart.put("youPay",df.format((youPay)));
+                chart.put("tag",tag);
+                chart.put("timestamp",-1*new Date().getTime());
 
                 String uniqueID = UUID.randomUUID().toString();
+
+                databaseReferenceHistory.child(curr_user_id).child("chart").child(uniqueID).setValue(chart);
 
 
 

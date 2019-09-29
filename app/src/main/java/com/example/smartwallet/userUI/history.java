@@ -6,10 +6,18 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.smartwallet.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +32,9 @@ import lecho.lib.hellocharts.view.PieChartView;
 public class history extends Fragment {
 
     PieChartView pieChartView;
-
+    DatabaseReference databaseReference;
+    String curr_user_id;
+    TextView foodText,shoppingText,moviesText,othersText;
 
     public history() {
         // Required empty public constructor
@@ -37,17 +47,64 @@ public class history extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_history, container, false);
 
-        pieChartView = view.findViewById(R.id.chart);
-        List<SliceValue> pieData = new ArrayList<>();
-        pieData.add(new SliceValue(15, Color.BLUE).setLabel("Q1:$10"));
-        pieData.add(new SliceValue(25,Color.GRAY).setLabel("Q2:$4"));
-        pieData.add(new SliceValue(10,Color.RED).setLabel("Q3:$18"));
-        pieData.add(new SliceValue(60,Color.MAGENTA).setLabel("Q4:$28"));
+        curr_user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        PieChartData pieChartData = new PieChartData(pieData);
-        pieChartData.setHasLabels(true);
-        pieChartData.setHasCenterCircle(true).setCenterText1("150").setCenterText2FontSize(30).setCenterText2("Total RS").setCenterText2FontSize(10);
-        pieChartView.setPieChartData(pieChartData);
+
+        pieChartView = view.findViewById(R.id.chart);
+
+        foodText = view.findViewById(R.id.food);
+        shoppingText = view.findViewById(R.id.shopping);
+        moviesText = view.findViewById(R.id.movies);
+        othersText = view.findViewById(R.id.others);
+
+
+
+        FirebaseDatabase.getInstance().getReference().child("allUsers").child(curr_user_id).child("chart").orderByChild("timestamp")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        float food=100,shopping=0,movies=0,others=0;
+                        List<SliceValue> pieData = new ArrayList<>();
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                            if(snapshot.child("tag").getValue().equals("food")){
+                                food += Float.parseFloat(snapshot.child("youPay").getValue(String.class));
+                            }else if(snapshot.child("tag").getValue().equals("shopping")){
+                                shopping += Float.parseFloat(snapshot.child("youPay").getValue(String.class));
+                            }else if(snapshot.child("tag").getValue().equals("movies")){
+                                movies += Float.parseFloat(snapshot.child("youPay").getValue(String.class));
+                            }else{
+                                others += Float.parseFloat(snapshot.child("youPay").getValue(String.class));
+                            }
+
+                        }
+
+                        pieData.add(new SliceValue(food, Color.BLUE).setLabel("Food"));
+                        pieData.add(new SliceValue(shopping,Color.GRAY).setLabel("Shopping"));
+                        pieData.add(new SliceValue(movies,Color.RED).setLabel("Movies"));
+                        pieData.add(new SliceValue(others,Color.MAGENTA).setLabel("Others"));
+
+                        PieChartData pieChartData = new PieChartData(pieData);
+                        pieChartData.setHasLabels(true);
+                        pieChartData.setHasCenterCircle(true).setCenterText1(Float.toString(food+shopping+movies+others)).setCenterText2FontSize(30).setCenterText2("Total RS").setCenterText2FontSize(10);
+                        pieChartView.setPieChartData(pieChartData);
+
+                        foodText.setText(Float.toString(food));
+                        shoppingText.setText(Float.toString(shopping));
+                        moviesText.setText(Float.toString(movies));
+                        othersText.setText(Float.toString(others));
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+
+
 
         return view;
 

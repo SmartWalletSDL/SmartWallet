@@ -61,12 +61,13 @@
                     android:textSize="25sp" />
 
                 <TextView
+                    android:id="@+id/food"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="0dp"
+                    android:layout_weight="0.5"
                     android:gravity="center_vertical"
                     android:text="75 RS"
-                    android:layout_weight="0.5"
                     android:textSize="20sp" />
             </LinearLayout>
 
@@ -95,12 +96,13 @@
                     android:textSize="25sp" />
 
                 <TextView
+                    android:id="@+id/shopping"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="0dp"
+                    android:layout_weight="0.5"
                     android:gravity="center_vertical"
                     android:text="75 RS"
-                    android:layout_weight="0.5"
                     android:textSize="20sp" />
             </LinearLayout>
 
@@ -129,12 +131,13 @@
                     android:textSize="25sp" />
 
                 <TextView
+                    android:id="@+id/movies"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="0dp"
+                    android:layout_weight="0.5"
                     android:gravity="center_vertical"
                     android:text="75 RS"
-                    android:layout_weight="0.5"
                     android:textSize="20sp" />
             </LinearLayout>
 
@@ -163,12 +166,13 @@
                     android:textSize="25sp" />
 
                 <TextView
+                    android:id="@+id/others"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="0dp"
+                    android:layout_weight="0.5"
                     android:gravity="center_vertical"
                     android:text="75 RS"
-                    android:layout_weight="0.5"
                     android:textSize="20sp" />
             </LinearLayout>
         </LinearLayout>
