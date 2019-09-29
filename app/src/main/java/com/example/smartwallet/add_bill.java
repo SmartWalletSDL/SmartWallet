@@ -190,6 +190,7 @@ public class add_bill extends AppCompatActivity implements friendsSuggestedList.
                 Log.e("hashset", String.valueOf(hashSet));
                 Log.e("positionSelected",Integer.toString(positionSelected[0]));
                 float youPay=0,theyPay=0;
+                float anotherTotal=0,justAnotherTotal=0;
                 boolean isOwed = false;
                 float totalVal = Float.parseFloat(total.getText().toString());
                 if(hashSet.size()==1){
@@ -198,29 +199,36 @@ public class add_bill extends AppCompatActivity implements friendsSuggestedList.
                             theyPay = totalVal/2;
                             youPay = totalVal/2;
                             isOwed = false;
+                            anotherTotal = theyPay;
                             break;
                         }
                         case 1: {
                             youPay = totalVal;
                             isOwed = true;
+                            anotherTotal = youPay;
                             break;
                         }
                         case 2:{
                             theyPay = totalVal;
                             isOwed = false;
+                            anotherTotal = theyPay;
                             break;
                         }
                         case 3:{
                             youPay = totalVal/2;
                             theyPay = totalVal/2;
                             isOwed = true;
+                            anotherTotal = theyPay;
                             break;
                         }
                     }
+                    justAnotherTotal = anotherTotal;
                 }else{
                     int people = hashSet.size()+1;
                     youPay = totalVal/people;
                     theyPay = totalVal/people;
+                    anotherTotal = totalVal - youPay;
+                    justAnotherTotal = theyPay;
                 }
                 final String descriptionVal = description.getText().toString();
                 String tag = "food";
@@ -255,15 +263,31 @@ public class add_bill extends AppCompatActivity implements friendsSuggestedList.
                 chart.put("tag",tag);
                 chart.put("timestamp",-1*new Date().getTime());
 
+                HashMap<String,Object> activity = new HashMap<>();
+                activity.put("transactionName",descriptionVal);
+                activity.put("amount",df.format(anotherTotal));
+                activity.put("isOwed",Boolean.toString(isOwed));
+                activity.put("timestamp",-1*new Date().getTime());
+                activity.put("userId",curr_user_id);
+
+                HashMap<String,Object> friendActivity = new HashMap<>();
+                friendActivity.put("transactionName",descriptionVal);
+                friendActivity.put("amount",df.format(justAnotherTotal));
+                friendActivity.put("isOwed",Boolean.toString(!isOwed));
+                friendActivity.put("timestamp",-1*new Date().getTime());
+                friendActivity.put("userId",curr_user_id);
+
                 String uniqueID = UUID.randomUUID().toString();
 
                 databaseReferenceHistory.child(curr_user_id).child("chart").child(uniqueID).setValue(chart);
+                databaseReferenceHistory.child(curr_user_id).child("activity").child(uniqueID).setValue(activity);
 
 
 
                 for(final String i:hashSet){
                     databaseReferenceHistory.child(curr_user_id).child("history").child(i).child(uniqueID).setValue(map);
                     databaseReferenceHistory.child(i).child("history").child(curr_user_id).child(uniqueID).setValue(friendMap);
+                    databaseReferenceHistory.child(i).child("activity").child(uniqueID).setValue(friendActivity);
                     final boolean finalIsOwed = isOwed;
                     final float finalYouPay = youPay;
                     final float finalTheyPay = theyPay;
