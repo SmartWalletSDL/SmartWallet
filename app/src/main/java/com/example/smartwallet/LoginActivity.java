@@ -107,8 +107,14 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
+
                                     loginProgress.dismiss();
-                                    goToMain();
+                                    if (mFirebaseAuth.getCurrentUser().isEmailVerified()){
+                                        goToMain();
+                                    }
+                                    else{
+                                        Toast.makeText(LoginActivity.this, "Please verify your email", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                                 else {
                                     loginProgress.hide();

@@ -103,17 +103,34 @@ public class SignUpActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    regProgress.dismiss();
-                                    FirebaseUser currUser = FirebaseAuth.getInstance().getCurrentUser();
-                                    String uid = currUser.getUid();
 
-                                    databaseReference = FirebaseDatabase.getInstance().getReference().child("allUsers").child(uid);
-                                    HashMap<String,String> map = new HashMap<>();
-                                    map.put("Username",usernm);
-                                    map.put("EmailId",email);
-                                    databaseReference.setValue(map);
+                                    mFirebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
 
-                                    goToMain();
+                                            regProgress.dismiss();
+                                            if (task.isSuccessful()){
+                                                Toast.makeText(SignUpActivity.this, "Registered Successfully, please check your email for verification", Toast.LENGTH_SHORT).show();
+
+                                                FirebaseUser currUser = FirebaseAuth.getInstance().getCurrentUser();
+                                                String uid = currUser.getUid();
+
+                                                databaseReference = FirebaseDatabase.getInstance().getReference().child("allUsers").child(uid);
+                                                HashMap<String,String> map = new HashMap<>();
+                                                map.put("Username",usernm);
+                                                map.put("EmailId",email);
+                                                databaseReference.setValue(map);
+
+                                                // first email must be verified
+                                                Intent tologin = new Intent(SignUpActivity.this,LoginActivity.class);
+                                                startActivity(tologin);
+                                                finish();
+                                            }
+                                            else{
+                                                Toast.makeText(SignUpActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
                                 }
                                 else {
                                     regProgress.hide();

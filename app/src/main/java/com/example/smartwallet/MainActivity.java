@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         FirebaseUser currUser = mFirebaseAuth.getCurrentUser();
-        if (currUser==null) {
+        if (currUser==null || !currUser.isEmailVerified()) {
             goToLogin();
         }
     }
