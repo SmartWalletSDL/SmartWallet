@@ -9,16 +9,27 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".firstActivity"></activity>
+        <activity
+            android:name=".editProfile"
+            android:parentActivityName=".settings" />
+        <activity
+            android:name=".resetPassword"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".settings"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".allUsers"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".add_bill" />
         <activity android:name=".users_history" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".SignUpActivity" />
+        <activity
+            android:name=".LoginActivity"
+            android:parentActivityName=".firstActivity"/>
+        <activity
+            android:name=".SignUpActivity"
+            android:parentActivityName=".firstActivity"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

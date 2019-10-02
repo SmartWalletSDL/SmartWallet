@@ -9,7 +9,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -22,7 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class settings extends AppCompatActivity {
 
     private Toolbar toolbar;
-    private Button accountSettings, emailSettings, notificationSettings, passcode, deleteAccount;
+    private Button editProfile, deleteAccount;
     private ProgressDialog deleteAccountProgress;
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
@@ -40,38 +39,15 @@ public class settings extends AppCompatActivity {
         getSupportActionBar().setTitle("Settings");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        accountSettings = findViewById(R.id.accountSettings);
-        emailSettings = findViewById(R.id.emailSettings);
-        notificationSettings = findViewById(R.id.notificationSettings);
-        passcode = findViewById(R.id.passcode);
+        editProfile = findViewById(R.id.editProfile);
         deleteAccount = findViewById(R.id.deleteAccount);
         deleteAccountProgress = new ProgressDialog(this);
 
-        accountSettings.setOnClickListener(new View.OnClickListener() {
+        editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-            }
-        });
-
-        emailSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        notificationSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        passcode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
+                Intent editProfile = new Intent (settings.this, editProfile.class);
+                startActivity(editProfile);
             }
         });
 

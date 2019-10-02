@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     Toolbar toolbar;
     private EditText emailId, password;
     private Button btnLogin;
-    private TextView tvlogin;
+    private TextView toLoginPage, toForgotPassword;
     private ProgressDialog loginProgress;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
@@ -39,13 +39,15 @@ public class LoginActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.login_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Log In");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
         emailId = findViewById(R.id.loginEmail);
         password = findViewById(R.id.loginPassword);
         btnLogin = findViewById(R.id.logIn);
-        tvlogin = findViewById(R.id.toSignupText);
+        toLoginPage = findViewById(R.id.toSignupText);
+        toForgotPassword = findViewById(R.id.forgotPassword);
         loginProgress = new ProgressDialog(this);
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
@@ -70,15 +72,7 @@ public class LoginActivity extends AppCompatActivity {
                 String email = emailId.getText().toString();
                 String pwd = password.getText().toString();
 
-                if(!email.isEmpty() && !pwd.isEmpty()){
-                    loginProgress.setTitle("Login User.");
-                    loginProgress.setMessage("Please Wait, while we check your credentials.");
-                    loginProgress.setCanceledOnTouchOutside(false);
-                    loginProgress.show();
-                    loginUser(email,pwd);
-                }
-
-                else if (email.isEmpty()) {
+                if (email.isEmpty()) {
                     emailId.setError("Enter email");
                     emailId.requestFocus();
                 }
@@ -86,14 +80,31 @@ public class LoginActivity extends AppCompatActivity {
                     password.setError("Enter password");
                     password.requestFocus();
                 }
+
+                else{
+                    loginProgress.setTitle("Login User.");
+                    loginProgress.setMessage("Please Wait, while we check your credentials.");
+                    loginProgress.setCanceledOnTouchOutside(false);
+                    loginProgress.show();
+                    loginUser(email,pwd);
+                }
             }
         });
 
-        tvlogin.setOnClickListener(new View.OnClickListener() {
+        toLoginPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent tosignup = new Intent(LoginActivity.this,SignUpActivity.class);
                 startActivity(tosignup);
+                finish();
+            }
+        });
+
+        toForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent toResetPassword = new Intent(LoginActivity.this,resetPassword.class);
+                startActivity(toResetPassword);
                 finish();
             }
         });

@@ -1,15 +1,21 @@
 package com.example.smartwallet;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     TabItem history;
     TabItem activity;
     ViewPager viewPager;
+    private ProgressDialog logOutProgress;
     PagerController pagerController;
 
     @Override
@@ -42,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         users = findViewById(R.id.users);
         history = findViewById(R.id.history);
         activity = findViewById(R.id.activity);
+
 
         viewPager = findViewById(R.id.viewPager);
 
@@ -74,15 +82,10 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         FirebaseUser currUser = mFirebaseAuth.getCurrentUser();
-        if (currUser==null || !currUser.isEmailVerified()) {
-            goToLogin();
+        if (currUser==null ) {
+            Intent firstActivity = new Intent(MainActivity.this, firstActivity.class);
+            startActivity(firstActivity);
         }
-    }
-
-    private void goToLogin() {
-        Intent tologin = new Intent(MainActivity.this,LoginActivity.class);
-        startActivity(tologin);
-        finish();
     }
 
     @Override
@@ -109,7 +112,8 @@ public class MainActivity extends AppCompatActivity {
 
         if(item.getItemId() == R.id.menu_log_out){
             FirebaseAuth.getInstance().signOut();
-            goToLogin();
+            Intent tologin = new Intent(MainActivity.this,LoginActivity.class);
+            startActivity(tologin);
         }
 
         return true;

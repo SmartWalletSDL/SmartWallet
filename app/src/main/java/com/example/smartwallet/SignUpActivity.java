@@ -43,6 +43,7 @@ public class SignUpActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.signup_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Create Account");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         name = findViewById(R.id.signupName);
@@ -59,29 +60,27 @@ public class SignUpActivity extends AppCompatActivity {
                 String email = emailId.getText().toString();
                 String pwd = password.getText().toString();
 
+                if (nm.isEmpty()){
+                    name.setError("Enter Name");
+                    name.requestFocus();
+                }
 
-                if(!nm.isEmpty() && !email.isEmpty() && !pwd.isEmpty()){
+                else if (email.isEmpty()) {
+                    emailId.setError("Enter Email");
+                    emailId.requestFocus();
+                }
+                else if (pwd.isEmpty()) {
+                    password.setError("Enter Password");
+                    password.requestFocus();
+                }
+
+                else{
                     regProgress.setTitle("Registering User.");
                     regProgress.setMessage("Please Wait, while we create your account.");
                     regProgress.setCanceledOnTouchOutside(false);
                     regProgress.show();
                     registerUser(nm,email,pwd);
                 }
-
-                else if (nm.isEmpty()){
-                    name.setError("Enter Name");
-                    name.requestFocus();
-                }
-
-                else if (email.isEmpty()) {
-                    emailId.setError("Enter email");
-                    emailId.requestFocus();
-                }
-                else if (pwd.isEmpty()) {
-                    password.setError("Enter password");
-                    password.requestFocus();
-                }
-
             }
         });
 
@@ -124,7 +123,6 @@ public class SignUpActivity extends AppCompatActivity {
                                                 // first email must be verified
                                                 Intent tologin = new Intent(SignUpActivity.this,LoginActivity.class);
                                                 startActivity(tologin);
-                                                finish();
                                             }
                                             else{
                                                 Toast.makeText(SignUpActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
