@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -41,6 +42,7 @@ import java.util.Date;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
@@ -69,9 +71,12 @@ public class add_bill extends AppCompatActivity implements friendsSuggestedList.
     ArrayAdapter<String> adapter;
     ArrayList<String> theyOweItems;
     int lastChipChecked;
+    Random random;
+
+    ImageView imageIcon;
 
 
-
+    String[] array;
     TextView save;
     Button dollar;
     @Override
@@ -87,6 +92,12 @@ public class add_bill extends AppCompatActivity implements friendsSuggestedList.
         theyOweItems.add("You owe the full amount");
         theyOweItems.add("They owe the full amount");
         theyOweItems.add("Paid by the other person and split equally");
+
+        array = new String[]{"man", "stud", "beard", "boy"};
+        random = new Random();
+
+        imageIcon = findViewById(R.id.imageView3);
+        imageIcon.setImageResource(R.drawable.food);
 
         tags = findViewById(R.id.chipGroup);
 
@@ -108,6 +119,15 @@ public class add_bill extends AppCompatActivity implements friendsSuggestedList.
         curr_user_id = curr_user.getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("allUsers").child(curr_user_id).child("Friends");
         databaseReferenceHistory = FirebaseDatabase.getInstance().getReference().child("allUsers");
+
+
+        tags.invalidate();
+        tags.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(ChipGroup group, int checkedId) {
+                Log.e("chipId",Integer.toString(checkedId));
+            }
+        });
 
         usersNames = findViewById(R.id.textInputLayout);
         usersNames.setOnClickListener(new View.OnClickListener() {
@@ -409,8 +429,11 @@ public class add_bill extends AppCompatActivity implements friendsSuggestedList.
                 String key = dataSnapshot.getKey();
                 if(!hashSet.contains(key)){
                     hashSet.add(key);
+                    int no = random.nextInt(4);
+                    int resId = getResources().getIdentifier(array[no],"drawable",getPackageName());
                     chip.setText(name[0]);
-                    chip.setCloseIconResource(R.drawable.ic_launcher_background);
+                    chip.setChipIconResource(resId);
+                    chip.setCloseIconResource(R.drawable.close);
                     chip.setCloseIconEnabled(true);
                     chip.setOnCloseIconClickListener(new View.OnClickListener() {
                         @Override

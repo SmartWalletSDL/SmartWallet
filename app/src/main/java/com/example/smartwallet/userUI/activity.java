@@ -1,9 +1,8 @@
 package com.example.smartwallet.userUI;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
-import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,12 +25,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -80,9 +75,9 @@ public class activity extends Fragment {
             protected void onBindViewHolder(@NonNull final ActivityViewHolder holder, int position, @NonNull final Activity model) {
                 Boolean isOwed = Boolean.parseBoolean(model.getIsOwed());
                 if(isOwed){
-                    holder.setHowMuchOwe("You owe "+model.getAmount());
+                    holder.setHowMuchOwe("You owe "+model.getAmount(),true);
                 }else {
-                    holder.setHowMuchOwe("You get back "+model.getAmount());
+                    holder.setHowMuchOwe("You get back "+model.getAmount(),false);
                 }
 
                 if (model.getUserId().equals(curr_user_id)){
@@ -91,7 +86,7 @@ public class activity extends Fragment {
                     databaseReference.child(model.getUserId()).child("Username").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            holder.setWhoPaidWho(dataSnapshot.getValue(String.class)+" added "+model.getTransactionName());
+                            holder.setWhoPaidWho(dataSnapshot.getValue(String.class)+" added '"+model.getTransactionName()+"'");
                         }
 
                         @Override
@@ -137,9 +132,14 @@ public class activity extends Fragment {
             textView.setText(whoPaidWhat);
         }
 
-        public void setHowMuchOwe(String howMuchOwe){
+        public void setHowMuchOwe(String howMuchOwe,boolean isOwed){
             TextView textView = view.findViewById(R.id.youOweHowMuch);
             textView.setText(howMuchOwe);
+            if(isOwed){
+                textView.setTextColor(Color.RED);
+            }else {
+                textView.setTextColor(Color.GREEN);
+            }
         }
 
         public void setDate(String date){

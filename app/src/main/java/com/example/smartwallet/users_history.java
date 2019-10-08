@@ -6,11 +6,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -73,13 +75,13 @@ public class users_history extends AppCompatActivity {
                 holder.setTransactionName(model.getName());
                 boolean isOwed = Boolean.parseBoolean(model.getIsOwed());
                 if(isOwed){
-                    holder.setBorrowedText("you borrowed");
+                    holder.setBorrowedText("you borrowed",model.getTheyPay());
                 }else{
-                    holder.setBorrowedText("you lent");
+                    holder.setBorrowedText("you lent",model.getTheyPay());
                 }
 
-                holder.setAmount(model.getTheyPay());
-                holder.setTag("tag: "+model.getTag());
+//                holder.setAmount(model.getTheyPay());
+                holder.setTag(model.getTag());
 
             }
 
@@ -114,18 +116,37 @@ public class users_history extends AppCompatActivity {
 
         public void setTag(String tag){
             TextView textView = view.findViewById(R.id.detailedHistoryTransactionTag);
-            textView.setText(tag);
+            ImageView imageView = view.findViewById(R.id.imageView2);
+            textView.setText("tag: "+tag);
+            if(tag.equals("food")){
+                imageView.setImageResource(R.drawable.food);
+            }else if (tag.equals("shopping")){
+                imageView.setImageResource(R.drawable.shopping);
+            }else if(tag.equals("movies")){
+                imageView.setImageResource(R.drawable.movies);
+            }else{
+                imageView.setImageResource(R.drawable.others);
+            }
         }
 
-        public void setBorrowedText(String borrowedText){
+        public void setBorrowedText(String borrowedText,String amount){
             TextView textView = view.findViewById(R.id.detailedHistoryTransactionBorrowed);
+            TextView textView2 = view.findViewById(R.id.detailedHistoryTransactionAmount);
             textView.setText(borrowedText);
+            textView2.setText(amount);
+            if(borrowedText.equals("you borrowed")){
+                textView.setTextColor(Color.RED);
+                textView2.setTextColor(Color.RED);
+            }else {
+                textView.setTextColor(Color.GREEN);
+                textView2.setTextColor(Color.GREEN);
+            }
         }
 
-        public void setAmount(String amount){
-            TextView textView = view.findViewById(R.id.detailedHistoryTransactionAmount);
-            textView.setText(amount);
-        }
+//        public void setAmount(String amount){
+//            TextView textView = view.findViewById(R.id.detailedHistoryTransactionAmount);
+//            textView.setText(amount);
+//        }
     }
 
     @Override

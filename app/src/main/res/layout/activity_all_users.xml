@@ -16,6 +16,11 @@
         android:id="@+id/users_list"
         android:layout_width="407dp"
         android:layout_height="601dp"
+        android:paddingStart="12dp"
+        android:paddingLeft="12dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="12dp"
+        android:paddingRight="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/app_tollbar" />

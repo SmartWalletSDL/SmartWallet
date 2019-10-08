@@ -18,24 +18,23 @@
 
     <TextView
         android:id="@+id/friend_list_username"
-        android:layout_width="200dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="Username"
+        android:text="@string/username"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="@+id/barrier"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/imageView2"
         app:layout_constraintTop_toTopOf="@+id/imageView2" />
 
     <TextView
         android:id="@+id/friend_list_prev"
-        android:layout_width="195dp"
+        android:layout_width="wrap_content"
         android:layout_height="26dp"
-        android:layout_marginTop="5dp"
         android:text="previous  50"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="@id/friend_list_username"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@id/friend_list_username"
         app:layout_constraintTop_toBottomOf="@id/friend_list_username" />
 
@@ -43,23 +42,35 @@
         android:id="@+id/owed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
+        android:layout_marginEnd="16dp"
         android:text="you are owed"
+        android:textAlignment="center"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/friend_list_username" />
 
     <TextView
         android:id="@+id/friend_total"
-        android:layout_width="71dp"
+        android:layout_width="wrap_content"
         android:layout_height="39dp"
         android:layout_marginTop="5dp"
         android:text="US$ 50"
+        android:textAlignment="center"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@id/owed"
         app:layout_constraintHorizontal_bias="0.52"
         app:layout_constraintStart_toStartOf="@id/owed"
         app:layout_constraintTop_toBottomOf="@id/owed" />
+
+    <View
+        android:id="@+id/view4"
+        android:layout_width="327dp"
+        android:layout_height="2dp"
+        android:layout_marginTop="16dp"
+        android:background="#347E7A7A"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier"

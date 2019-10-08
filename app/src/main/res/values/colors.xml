@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#8600AA</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimary">#20608C</color>
+    <color name="colorPrimaryDark">#415883</color>
     <color name="colorAccent">#4D5EF7</color>
-    <color name="tabIndicatorColor">#5773FF</color>
+    <color name="tabIndicatorColor">#1A70C2</color>
     <color name="white">#fff</color>
-    <color name="toolBarColor">#8600AA</color>
+    <color name="toolBarColor">#20608C</color>
+    <color name="actionBarColor">#0F4D92</color>
+    <color name="red">#DAF00B5A</color>
+    <color name="color1">#B7ACA7AA</color>
+    <color name="color2">#E4ECE7EC</color>
+    <color name="color_checked">#fff</color>
+    <color name="color_unchecked">#202020</color>
 
 </resources>

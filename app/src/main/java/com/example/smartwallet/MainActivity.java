@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     TabItem activity;
     ViewPager viewPager;
     PagerController pagerController;
+    FloatingActionButton addbill;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,15 @@ public class MainActivity extends AppCompatActivity {
 
         pagerController = new PagerController(getSupportFragmentManager(),tabLayout.getTabCount());
         viewPager.setAdapter(pagerController);
+
+        addbill = findViewById(R.id.addBill);
+        addbill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),add_bill.class);
+                startActivity(intent);
+            }
+        });
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -101,6 +113,14 @@ public class MainActivity extends AppCompatActivity {
             FirebaseAuth.getInstance().signOut();
             goToLogin();
         }
+
+
+        if(item.getItemId() == R.id.all_users_in_menu){
+            Intent intent = new Intent(MainActivity.this,com.example.smartwallet.allUsers.class);
+            startActivity(intent);
+        }
+
+
 
         if(item.getItemId() == R.id.friend_requests){
             Intent intent = new Intent(MainActivity.this,friend_requests.class);

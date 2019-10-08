@@ -85,7 +85,7 @@ public class allUsers extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()){
                                                 Button button = view.findViewById(R.id.addFriend);
-                                                button.setBackgroundResource(R.drawable.common_google_signin_btn_icon_dark);
+                                                button.setBackgroundResource(R.drawable.friendrequestsent);
                                                 button.setEnabled(false);
                                                 Toast.makeText(allUsers.this,"Request Sent Successfully",Toast.LENGTH_LONG).show();
                                             }

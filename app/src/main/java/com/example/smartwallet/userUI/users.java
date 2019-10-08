@@ -2,6 +2,7 @@ package com.example.smartwallet.userUI;
 
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,7 +35,6 @@ import com.google.firebase.database.ValueEventListener;
  * A simple {@link Fragment} subclass.
  */
 public class users extends Fragment {
-    Button addUser;
     RecyclerView listView;
 
     private DatabaseReference databaseReference;
@@ -52,7 +52,7 @@ public class users extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_users, container, false);
         // Inflate the layout for this fragment
-        addUser = view.findViewById(R.id.addUser);
+
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         curr_user_id = user.getUid();
@@ -63,13 +63,6 @@ public class users extends Fragment {
         listView.setHasFixedSize(true);
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        addUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(),com.example.smartwallet.allUsers.class);
-                startActivity(intent);
-            }
-        });
 
 
         FirebaseRecyclerOptions<TopUI> options = new FirebaseRecyclerOptions.Builder<TopUI>()
@@ -115,8 +108,8 @@ public class users extends Fragment {
                 });
 
                 holder.setPrevTransactionName(model.getPrevTransactionName());
-                holder.setisOwed(model.getIsOwed());
-                holder.setTotal(model.getTotal());
+                holder.setisOwed(model.getIsOwed(),model.getTotal());
+//                holder.setTotal(model.getTotal());
             }
 
 
@@ -161,21 +154,30 @@ public class users extends Fragment {
             textView.setText(transactionName);
         }
 
-        public void setisOwed(String isOwedString) {
+        public void setisOwed(String isOwedString,String totalString) {
             int isOwed = Integer.parseInt(isOwedString);
             TextView owed = view.findViewById(R.id.owed);
+            TextView total = view.findViewById(R.id.friend_total);
             if(isOwed==0){
                 owed.setText(R.string.you_are_owed);
+                owed.setTextColor(Color.GREEN);
+                total.setText(totalString);
+                total.setTextColor(Color.GREEN);
             }else if(isOwed==1){
                 owed.setText("you owe");
+                owed.setTextColor(Color.RED);
+                total.setText(totalString);
+                total.setTextColor(Color.RED);
             }else{
                 owed.setText("settled up");
+                total.setText(totalString);
+
             }
         }
 
-        public void setTotal(String totalString){
-            TextView total = view.findViewById(R.id.friend_total);
-            total.setText(totalString);
-        }
+//        public void setTotal(String totalString){
+//            TextView total = view.findViewById(R.id.friend_total);
+//            total.setText(totalString);
+//        }
     }
 }
