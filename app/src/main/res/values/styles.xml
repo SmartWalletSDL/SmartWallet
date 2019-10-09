@@ -6,7 +6,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/toolBarColor</item>
         <item name="colorAccent">@color/colorAccent</item>
-
+        <item name="android:textColor">@color/color_unchecked</item>
+        <item name="android:buttonStyle">@style/Theme.AppCompat</item>
     </style>
 
     <style name="TabLayoutTextStyle" parent="TextAppearance.Design.Tab">
@@ -31,6 +32,7 @@
         <item name="chipBackgroundColor">@color/background_color_chip_state_list</item>
         <item name="android:textColor">@color/text_color_chip_state_list</item>
     </style>
+
 
 
 </resources>

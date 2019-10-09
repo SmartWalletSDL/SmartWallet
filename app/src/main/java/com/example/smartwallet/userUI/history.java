@@ -78,14 +78,14 @@ public class history extends Fragment {
 
                         }
 
-                        pieData.add(new SliceValue(food, Color.BLUE).setLabel("Food"));
-                        pieData.add(new SliceValue(shopping,Color.GRAY).setLabel("Shopping"));
-                        pieData.add(new SliceValue(movies,Color.RED).setLabel("Movies"));
+                        pieData.add(new SliceValue(food, Color.parseColor("#194AD1")).setLabel("Food"));
+                        pieData.add(new SliceValue(shopping,Color.parseColor("#F44336")).setLabel("Shopping"));
+                        pieData.add(new SliceValue(movies,Color.parseColor("#4CAF50")).setLabel("Movies"));
                         pieData.add(new SliceValue(others,Color.MAGENTA).setLabel("Others"));
 
                         PieChartData pieChartData = new PieChartData(pieData);
                         pieChartData.setHasLabels(true);
-                        pieChartData.setHasCenterCircle(true).setCenterText1(Float.toString(food+shopping+movies+others)).setCenterText2FontSize(30).setCenterText2("Total RS").setCenterText2FontSize(10);
+                        pieChartData.setHasCenterCircle(true).setCenterText1(Float.toString(food+shopping+movies+others)).setCenterText2FontSize(18).setCenterText2("Total RS").setCenterText2FontSize(10);
                         pieChartView.setPieChartData(pieChartData);
 
                         foodText.setText(Float.toString(food));

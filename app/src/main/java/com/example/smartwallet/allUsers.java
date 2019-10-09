@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import org.w3c.dom.Text;
+
+import java.lang.reflect.Field;
+import java.util.Random;
 
 public class allUsers extends AppCompatActivity {
 
@@ -127,11 +131,13 @@ public class allUsers extends AppCompatActivity {
         View view;
         Button addFriend;
         MyClickListener listener;
+        Random random;
 
         public UsersViewHolder(@NonNull View itemView,MyClickListener listener) {
             super(itemView);
 
             view = itemView;
+            random = new Random();
             addFriend = view.findViewById(R.id.addFriend);
             this.listener = listener;
             addFriend.setOnClickListener(this);
@@ -140,6 +146,10 @@ public class allUsers extends AppCompatActivity {
         public void setUsername(String username) {
             TextView textView = view.findViewById(R.id.username);
             textView.setText(username);
+            ImageView imageView = view.findViewById(R.id.imageView4);
+            int no = random.nextInt(50);
+            int resId = getResId("a"+no, R.drawable.class);
+            imageView.setImageResource(resId);
         }
 
         public void setEmailId(String emailId) {
@@ -154,6 +164,17 @@ public class allUsers extends AppCompatActivity {
 
         public interface MyClickListener{
             void onAddFriend(int p);
+        }
+    }
+
+    public static int getResId(String resName, Class<?> c) {
+
+        try {
+            Field idField = c.getDeclaredField(resName);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
         }
     }
 }

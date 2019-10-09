@@ -5,10 +5,22 @@ public class Activity {
     String isOwed;
     String transactionName;
     String userId;
+    String tag;
+
+
     Long timestamp;
 
     public Activity() {
     }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
 
     public Long getTimestamp() {
         return timestamp;

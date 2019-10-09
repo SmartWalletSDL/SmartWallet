@@ -47,22 +47,29 @@
         android:id="@+id/viewPager"
         android:layout_width="409dp"
         android:layout_height="555dp"
+        android:backgroundTint="#19ECE4E4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tablayout" >
+        app:layout_constraintTop_toBottomOf="@+id/tablayout">
 
     </androidx.viewpager.widget.ViewPager>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addBill"
-        android:layout_width="78dp"
+        android:layout_width="66dp"
         android:layout_height="66dp"
         android:layout_marginEnd="12dp"
         android:layout_marginBottom="12dp"
+        android:background="@null"
         android:clickable="true"
+        android:foregroundGravity="center|fill_vertical"
+        android:scaleType="fitXY"
+        app:backgroundTint="#03A9F4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:maxImageSize="30dp"
+        app:pressedTranslationZ="1dp"
+        app:srcCompat="@drawable/add" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

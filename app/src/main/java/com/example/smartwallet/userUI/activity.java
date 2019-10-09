@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -97,7 +98,7 @@ public class activity extends Fragment {
                 }
 
                 holder.setDate(sdf.format(new Date(-1*model.getTimestamp())));
-
+                holder.setImage(model.getTag());
 
             }
 
@@ -145,6 +146,19 @@ public class activity extends Fragment {
         public void setDate(String date){
             TextView textView = view.findViewById(R.id.activityDate);
             textView.setText(date);
+        }
+
+        public void setImage(String tag){
+            ImageView imageView = view.findViewById(R.id.imageView6);
+            if(tag.equals("food")){
+                imageView.setImageResource(R.drawable.food);
+            }else if(tag.equals("shopping")){
+                imageView.setImageResource(R.drawable.shopping);
+            }else if(tag.equals("movies")){
+                imageView.setImageResource(R.drawable.movies);
+            }else{
+                imageView.setImageResource(R.drawable.others);
+            }
         }
 
     }

@@ -1,13 +1,5 @@
 package com.example.smartwallet;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatEditText;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,8 +13,14 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -33,19 +31,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.EventListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicLong;
 
 
 public class add_bill extends AppCompatActivity implements friendsSuggestedList.onSomeEventListener{
@@ -75,7 +70,6 @@ public class add_bill extends AppCompatActivity implements friendsSuggestedList.
 
     ImageView imageIcon;
 
-
     String[] array;
     TextView save;
     Button dollar;
@@ -86,6 +80,7 @@ public class add_bill extends AppCompatActivity implements friendsSuggestedList.
 
         chipGroup = findViewById(R.id.friendsNamesChips);
         final int[] positionSelected = {2};
+
 
         theyOweItems = new ArrayList<>();
         theyOweItems.add("Paid by you and split equally");
@@ -121,13 +116,13 @@ public class add_bill extends AppCompatActivity implements friendsSuggestedList.
         databaseReferenceHistory = FirebaseDatabase.getInstance().getReference().child("allUsers");
 
 
-        tags.invalidate();
-        tags.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(ChipGroup group, int checkedId) {
-                Log.e("chipId",Integer.toString(checkedId));
-            }
-        });
+//        tags.invalidate();
+//        tags.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(ChipGroup group, int checkedId) {
+//                Log.e("chipId",Integer.toString(checkedId));
+//            }
+//        });
 
         usersNames = findViewById(R.id.textInputLayout);
         usersNames.setOnClickListener(new View.OnClickListener() {
@@ -198,7 +193,15 @@ public class add_bill extends AppCompatActivity implements friendsSuggestedList.
                     return;
                 }
                 lastChipChecked = checkedId;
-
+                if(checkedId == R.id.Food){
+                    imageIcon.setImageResource(R.drawable.food);
+                }else if(checkedId==R.id.Shopping){
+                    imageIcon.setImageResource(R.drawable.shopping);
+                }else if(checkedId==R.id.Movies){
+                    imageIcon.setImageResource(R.drawable.movies);
+                }else {
+                    imageIcon.setImageResource(R.drawable.others);
+                }
 
             }
         });
@@ -289,6 +292,7 @@ public class add_bill extends AppCompatActivity implements friendsSuggestedList.
                 activity.put("isOwed",Boolean.toString(isOwed));
                 activity.put("timestamp",-1*new Date().getTime());
                 activity.put("userId",curr_user_id);
+                activity.put("tag",tag);
 
                 HashMap<String,Object> friendActivity = new HashMap<>();
                 friendActivity.put("transactionName",descriptionVal);
@@ -296,6 +300,7 @@ public class add_bill extends AppCompatActivity implements friendsSuggestedList.
                 friendActivity.put("isOwed",Boolean.toString(!isOwed));
                 friendActivity.put("timestamp",-1*new Date().getTime());
                 friendActivity.put("userId",curr_user_id);
+                friendActivity.put("tag",tag);
 
                 String uniqueID = UUID.randomUUID().toString();
 

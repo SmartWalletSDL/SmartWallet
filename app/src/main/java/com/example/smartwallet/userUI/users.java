@@ -4,12 +4,10 @@ package com.example.smartwallet.userUI;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -30,6 +28,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Field;
+import java.util.Random;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,6 +42,7 @@ public class users extends Fragment {
     private FirebaseUser user;
     private FirebaseRecyclerAdapter adapter;
     String curr_user_id;
+    ImageView imageView;
 
     public users() {
         // Required empty public constructor
@@ -53,7 +55,8 @@ public class users extends Fragment {
         View view = inflater.inflate(R.layout.fragment_users, container, false);
         // Inflate the layout for this fragment
 
-
+        imageView = view.findViewById(R.id.imageView);
+        imageView.setImageResource(R.drawable.a10);
         user = FirebaseAuth.getInstance().getCurrentUser();
         curr_user_id = user.getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("allUsers");
@@ -136,16 +139,22 @@ public class users extends Fragment {
     public static class TopUIViewHolder extends RecyclerView.ViewHolder{
 
         View view;
+        Random random;
 
 
         public TopUIViewHolder(@NonNull View itemView) {
             super(itemView);
 
             view = itemView;
+            random = new Random();
         }
 
         public void setUsername(String username) {
             TextView textView = view.findViewById(R.id.friend_list_username);
+            ImageView imageView = view.findViewById(R.id.imageView2);
+            int no = random.nextInt(50);
+            int resId = getResId("a"+no, R.drawable.class);
+            imageView.setImageResource(resId);
             textView.setText(username);
         }
 
@@ -179,5 +188,16 @@ public class users extends Fragment {
 //            TextView total = view.findViewById(R.id.friend_total);
 //            total.setText(totalString);
 //        }
+    }
+
+    public static int getResId(String resName, Class<?> c) {
+
+        try {
+            Field idField = c.getDeclaredField(resName);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 }
