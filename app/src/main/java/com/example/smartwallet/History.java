@@ -5,11 +5,13 @@ public class History {
     private String name;
     private String tag;
     private String theyPay;
+    private String youPay;
 //    private String timeStamp;
 //    private String youPay;
 
     public History() {
     }
+
 
     public History(String isOwed, String name, String tag, String theyPay) {
         this.isOwed = isOwed;
@@ -19,6 +21,15 @@ public class History {
 //        this.timeStamp = timeStamp;
 //        this.youPay = youPay;
     }
+
+    public String getYouPay() {
+        return youPay;
+    }
+
+    public void setYouPay(String youPay) {
+        this.youPay = youPay;
+    }
+
 
     public String getIsOwed() {
         return isOwed;

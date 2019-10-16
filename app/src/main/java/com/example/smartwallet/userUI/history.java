@@ -20,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import lecho.lib.hellocharts.model.PieChartData;
@@ -57,49 +58,106 @@ public class history extends Fragment {
         moviesText = view.findViewById(R.id.movies);
         othersText = view.findViewById(R.id.others);
 
+        final HashSet<String> friend_users_ids = new HashSet<>();
+
+        FirebaseDatabase.getInstance().getReference().child("allUsers").child(curr_user_id).child("Friends").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    friend_users_ids.add(snapshot.getKey());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
-        FirebaseDatabase.getInstance().getReference().child("allUsers").child(curr_user_id).child("chart").orderByChild("timestamp")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        float food=100,shopping=0,movies=0,others=0;
-                        List<SliceValue> pieData = new ArrayList<>();
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                            if(snapshot.child("tag").getValue().equals("food")){
-                                food += Float.parseFloat(snapshot.child("youPay").getValue(String.class));
-                            }else if(snapshot.child("tag").getValue().equals("shopping")){
-                                shopping += Float.parseFloat(snapshot.child("youPay").getValue(String.class));
-                            }else if(snapshot.child("tag").getValue().equals("movies")){
-                                movies += Float.parseFloat(snapshot.child("youPay").getValue(String.class));
-                            }else{
-                                others += Float.parseFloat(snapshot.child("youPay").getValue(String.class));
-                            }
 
+        FirebaseDatabase.getInstance().getReference().child("allUsers").child(curr_user_id).child("history").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                float food=0,shopping=0,movies=0,others=0;
+                List<SliceValue> pieData = new ArrayList<>();
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    for(DataSnapshot snapshot1:snapshot.getChildren()){
+                        if(snapshot1.child("tag").getValue().equals("food")){
+                            food += Float.parseFloat(snapshot1.child("youPay").getValue(String.class));
+                        }else if(snapshot1.child("tag").getValue().equals("shopping")){
+                            shopping += Float.parseFloat(snapshot1.child("youPay").getValue(String.class));
+                        }else if(snapshot1.child("tag").getValue().equals("movies")){
+                            movies += Float.parseFloat(snapshot1.child("youPay").getValue(String.class));
+                        }else{
+                            others += Float.parseFloat(snapshot1.child("youPay").getValue(String.class));
                         }
-
-                        pieData.add(new SliceValue(food, Color.parseColor("#194AD1")).setLabel("Food"));
-                        pieData.add(new SliceValue(shopping,Color.parseColor("#F44336")).setLabel("Shopping"));
-                        pieData.add(new SliceValue(movies,Color.parseColor("#4CAF50")).setLabel("Movies"));
-                        pieData.add(new SliceValue(others,Color.MAGENTA).setLabel("Others"));
-
-                        PieChartData pieChartData = new PieChartData(pieData);
-                        pieChartData.setHasLabels(true);
-                        pieChartData.setHasCenterCircle(true).setCenterText1(Float.toString(food+shopping+movies+others)).setCenterText2FontSize(18).setCenterText2("Total RS").setCenterText2FontSize(10);
-                        pieChartView.setPieChartData(pieChartData);
-
-                        foodText.setText(Float.toString(food));
-                        shoppingText.setText(Float.toString(shopping));
-                        moviesText.setText(Float.toString(movies));
-                        othersText.setText(Float.toString(others));
-
                     }
+                }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                pieData.add(new SliceValue(food, Color.parseColor("#194AD1")).setLabel("Food"));
+                pieData.add(new SliceValue(shopping,Color.parseColor("#F44336")).setLabel("Shopping"));
+                pieData.add(new SliceValue(movies,Color.parseColor("#4CAF50")).setLabel("Movies"));
+                pieData.add(new SliceValue(others,Color.MAGENTA).setLabel("Others"));
 
-                    }
-                });
+                PieChartData pieChartData = new PieChartData(pieData);
+                pieChartData.setHasLabels(true);
+                pieChartData.setHasCenterCircle(true).setCenterText1(Float.toString(food+shopping+movies+others)).setCenterText2FontSize(18).setCenterText2("Total RS").setCenterText2FontSize(10);
+                pieChartView.setPieChartData(pieChartData);
+
+                foodText.setText(Float.toString(food));
+                shoppingText.setText(Float.toString(shopping));
+                moviesText.setText(Float.toString(movies));
+                othersText.setText(Float.toString(others));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+//        FirebaseDatabase.getInstance().getReference().child("allUsers").child(curr_user_id).child("chart").orderByChild("timestamp")
+//                .addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                        float food=0,shopping=0,movies=0,others=0;
+//                        List<SliceValue> pieData = new ArrayList<>();
+//                        for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+//                            if(snapshot.child("tag").getValue().equals("food")){
+//                                food += Float.parseFloat(snapshot.child("youPay").getValue(String.class));
+//                            }else if(snapshot.child("tag").getValue().equals("shopping")){
+//                                shopping += Float.parseFloat(snapshot.child("youPay").getValue(String.class));
+//                            }else if(snapshot.child("tag").getValue().equals("movies")){
+//                                movies += Float.parseFloat(snapshot.child("youPay").getValue(String.class));
+//                            }else{
+//                                others += Float.parseFloat(snapshot.child("youPay").getValue(String.class));
+//                            }
+//
+//                        }
+//
+//                        pieData.add(new SliceValue(food, Color.parseColor("#194AD1")).setLabel("Food"));
+//                        pieData.add(new SliceValue(shopping,Color.parseColor("#F44336")).setLabel("Shopping"));
+//                        pieData.add(new SliceValue(movies,Color.parseColor("#4CAF50")).setLabel("Movies"));
+//                        pieData.add(new SliceValue(others,Color.MAGENTA).setLabel("Others"));
+//
+//                        PieChartData pieChartData = new PieChartData(pieData);
+//                        pieChartData.setHasLabels(true);
+//                        pieChartData.setHasCenterCircle(true).setCenterText1(Float.toString(food+shopping+movies+others)).setCenterText2FontSize(18).setCenterText2("Total RS").setCenterText2FontSize(10);
+//                        pieChartView.setPieChartData(pieChartData);
+//
+//                        foodText.setText(Float.toString(food));
+//                        shoppingText.setText(Float.toString(shopping));
+//                        moviesText.setText(Float.toString(movies));
+//                        othersText.setText(Float.toString(others));
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                    }
+//                });
 
 
 

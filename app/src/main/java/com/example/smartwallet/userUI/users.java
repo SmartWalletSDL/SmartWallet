@@ -167,12 +167,12 @@ public class users extends Fragment {
             int isOwed = Integer.parseInt(isOwedString);
             TextView owed = view.findViewById(R.id.owed);
             TextView total = view.findViewById(R.id.friend_total);
-            if(isOwed==0){
+            if(isOwed==1){
                 owed.setText(R.string.you_are_owed);
                 owed.setTextColor(Color.GREEN);
                 total.setText(totalString);
                 total.setTextColor(Color.GREEN);
-            }else if(isOwed==1){
+            }else if(isOwed==0){
                 owed.setText("you owe");
                 owed.setTextColor(Color.RED);
                 total.setText(totalString);

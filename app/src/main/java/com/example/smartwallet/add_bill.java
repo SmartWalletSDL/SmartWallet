@@ -22,6 +22,7 @@ import androidx.appcompat.widget.AppCompatEditText;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
@@ -281,10 +282,15 @@ public class add_bill extends AppCompatActivity implements friendsSuggestedList.
                 friendMap.put("tag",tag);
                 friendMap.put("timestamp", -1*new Date().getTime());
 
-                HashMap<String,Object> chart = new HashMap<>();
-                chart.put("youPay",df.format((youPay)));
-                chart.put("tag",tag);
-                chart.put("timestamp",-1*new Date().getTime());
+//                HashMap<String,Object> chart = new HashMap<>();
+//                chart.put("youPay",df.format((youPay)));
+//                chart.put("tag",tag);
+//                chart.put("timestamp",-1*new Date().getTime());
+//
+//                HashMap<String,Object> friendChart = new HashMap<>();
+//                chart.put("youPay",df.format((theyPay)));
+//                chart.put("tag",tag);
+//                chart.put("timestamp",-1*new Date().getTime());
 
                 HashMap<String,Object> activity = new HashMap<>();
                 activity.put("transactionName",descriptionVal);
@@ -304,18 +310,57 @@ public class add_bill extends AppCompatActivity implements friendsSuggestedList.
 
                 String uniqueID = UUID.randomUUID().toString();
 
-                databaseReferenceHistory.child(curr_user_id).child("chart").child(uniqueID).setValue(chart);
+//                databaseReferenceHistory.child(curr_user_id).child("chart").child(uniqueID).setValue(chart);
                 databaseReferenceHistory.child(curr_user_id).child("activity").child(uniqueID).setValue(activity);
 
 
 
                 for(final String i:hashSet){
                     databaseReferenceHistory.child(curr_user_id).child("history").child(i).child(uniqueID).setValue(map);
+//                    databaseReferenceHistory.child(i).child("chart").child(uniqueID).setValue(friendChart).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                        @Override
+//                        public void onSuccess(Void aVoid) {
+//                            Log.e("chart","added successfully");
+//                        }
+//                    });
                     databaseReferenceHistory.child(i).child("history").child(curr_user_id).child(uniqueID).setValue(friendMap);
                     databaseReferenceHistory.child(i).child("activity").child(uniqueID).setValue(friendActivity);
                     final boolean finalIsOwed = isOwed;
                     final float finalYouPay = youPay;
                     final float finalTheyPay = theyPay;
+                    databaseReferenceHistory.child(i).child("topUI").child(curr_user_id).child("total").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            float totalTopUiValue = Float.parseFloat(dataSnapshot.getValue(String.class));
+
+                            float friendTotalAfterAddition = 0;
+                            int friendIsOwedInt = 0;
+                            if(finalIsOwed){
+                                friendTotalAfterAddition = totalTopUiValue + finalYouPay;
+                            }else{
+                                friendTotalAfterAddition = totalTopUiValue - finalTheyPay;
+                            }
+
+                            if(friendTotalAfterAddition > 0){
+                                friendIsOwedInt = 1;
+                            }else if(friendTotalAfterAddition == 0){
+                                friendIsOwedInt = 2;
+                            }
+
+                            HashMap<String,Object> friendMap1 = new HashMap<>();
+                            friendMap1.put("isOwed",Integer.toString(friendIsOwedInt));
+                            friendMap1.put("prevTransactionName",descriptionVal);
+                            friendMap1.put("prevTransactionValue",df.format(finalTheyPay));
+                            friendMap1.put("total",df.format(friendTotalAfterAddition));
+
+                            databaseReferenceHistory.child(i).child("topUI").child(curr_user_id).updateChildren(friendMap1);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                     databaseReferenceHistory.child(curr_user_id).child("topUI").child(i).child("total").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -335,19 +380,7 @@ public class add_bill extends AppCompatActivity implements friendsSuggestedList.
                             }
 
 
-                            float friendTotalAfterAddition = 0;
-                            int friendIsOwedInt = 0;
-                            if(finalIsOwed){
-                                friendTotalAfterAddition = totalTopUiValue + finalYouPay;
-                            }else{
-                                friendTotalAfterAddition = totalTopUiValue - finalTheyPay;
-                            }
 
-                            if(friendTotalAfterAddition > 0){
-                                friendIsOwedInt = 1;
-                            }else if(friendTotalAfterAddition == 0){
-                                friendIsOwedInt = 2;
-                            }
 
                             HashMap<String,Object> map1 = new HashMap<>();
                             map1.put("isOwed",Integer.toString(isOwedInt));
@@ -355,13 +388,9 @@ public class add_bill extends AppCompatActivity implements friendsSuggestedList.
                             map1.put("prevTransactionValue",df.format(finalYouPay));
                             map1.put("total",df.format(totalAfterAddition));
 
-                            HashMap<String,Object> friendMap1 = new HashMap<>();
-                            friendMap1.put("isOwed",Integer.toString(friendIsOwedInt));
-                            friendMap1.put("prevTransactionName",descriptionVal);
-                            friendMap1.put("prevTransactionValue",df.format(finalTheyPay));
-                            friendMap1.put("total",df.format(friendTotalAfterAddition));
 
-                            databaseReferenceHistory.child(i).child("topUI").child(curr_user_id).updateChildren(friendMap1);
+
+
 
                             databaseReferenceHistory.child(curr_user_id).child("topUI").child(i).updateChildren(map1, new DatabaseReference.CompletionListener() {
                                 @Override

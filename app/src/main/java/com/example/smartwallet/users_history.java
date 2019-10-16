@@ -75,7 +75,7 @@ public class users_history extends AppCompatActivity {
                 holder.setTransactionName(model.getName());
                 boolean isOwed = Boolean.parseBoolean(model.getIsOwed());
                 if(isOwed){
-                    holder.setBorrowedText("you borrowed",model.getTheyPay());
+                    holder.setBorrowedText("you borrowed",model.getYouPay());
                 }else{
                     holder.setBorrowedText("you lent",model.getTheyPay());
                 }
